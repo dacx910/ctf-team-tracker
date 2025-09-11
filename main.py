@@ -34,9 +34,9 @@ async def get_doing(interaction: discord.Interaction):
         description = 'Nobody is doing anything!'
 
     embed = discord.Embed(
-        title='Problems in progress',
+        title=':tools: Problems in progress',
         description=description,
-        color=discord.Color.blurple()
+        color=discord.Color.green()
     )
     await interaction.response.send_message(embed=embed)
 
@@ -50,17 +50,17 @@ async def start(interaction: discord.Interaction, problem_name: str):
         for user_id in user_ids:
             description += f'- <@{user_id}>\n';
         embed = discord.Embed(
-                title='This problem was already completed!',
+                title=':ballot_box_with_check: This problem was already completed!',
                 description=description,
-                color=discord.Color.blurple()
+                color=discord.Color.red()
         )
         await interaction.response.send_message(embed=embed)
         return
 
     embed = discord.Embed(
-            title='Started a proplem',
+            title=':white_check_mark: Started a proplem',
             description=f'{interaction.user.mention} now working on {problem_name}!',
-            color=discord.Color.blurple()
+            color=discord.Color.green()
     )
     await interaction.response.send_message(embed=embed)
 
@@ -70,9 +70,9 @@ async def stop(interaction: discord.Interaction, problem_name: str):
     await db.stop(interaction.guild_id, interaction.user.id, problem_name)
 
     embed = discord.Embed(
-            title='Stopped a proplem',
+            title=':octagonal_sign: Stopped a proplem',
             description=f'{interaction.user.mention} is no longer working on {problem_name}!',
-            color=discord.Color.blurple()
+            color=discord.Color.red()
     )
     await interaction.response.send_message(embed=embed)
 
@@ -84,15 +84,15 @@ class LeaderboardType(Enum):
 @bot.tree.command(name='leaderboard', description='Get the leaderboard! Can be problems, write-ups, or both!')
 async def get_leaderboard(interaction: discord.Interaction, leaderboard_type: Optional[LeaderboardType] = LeaderboardType.ALL):
     if leaderboard_type == LeaderboardType.ALL:
-        title = 'Full Leaderboard'
+        title = ':trophy: Full Leaderboard'
         none = 'No solves or write-ups yet!'
         leaderboard = await db.get_leaderboard_all(interaction.guild_id)
     elif leaderboard_type == LeaderboardType.PROBLEMS:
-        title = 'Problem Leaderboard'
+        title = ':trophy: Problem Leaderboard'
         none = 'No solves yet!'
         leaderboard = await db.get_leaderboard_challenges(interaction.guild_id)
     else:
-        title = 'Write-up Leaderboard'
+        title = ':trophy: Write-up Leaderboard'
         none = 'No write-ups yet!'
         leaderboard = await db.get_leaderboard_writeups(interaction.guild_id)
 
@@ -105,7 +105,7 @@ async def get_leaderboard(interaction: discord.Interaction, leaderboard_type: Op
     embed = discord.Embed(
             title=title,
             description=description,
-            color=discord.Color.blurple()
+            color=discord.Color.green()
     )
     await interaction.response.send_message(embed=embed)
 
@@ -116,15 +116,15 @@ async def solve(interaction: discord.Interaction, problem_name: str):
 
     if result:
         embed = discord.Embed(
-                title='Solved!',
+                title=':triangular_flag_on_post: Solved!',
                 description=f'{interaction.user.mention} has solved {problem_name}!',
-                color=discord.Color.blurple()
+                color=discord.Color.green()
         )
     else:
         embed = discord.Embed(
-                title='Solved!',
+                title='Already solved!',
                 description=f'{interaction.user.mention} has already solved {problem_name}.',
-                color=discord.Color.blurple()
+                color=discord.Color.red()
         )
 
     await interaction.response.send_message(embed=embed)
@@ -136,15 +136,15 @@ async def write_up(interaction: discord.Interaction, problem_name: str):
 
     if result:
         embed = discord.Embed(
-                title='Write-up submitted!',
+                title=':pencil: Write-up submitted!',
                 description=f'{interaction.user.mention} submitted a write-up for {problem_name}!',
-                color=discord.Color.blurple()
+                color=discord.Color.green()
         )
     else:
         embed = discord.Embed(
                 title='Write-up submitted!',
                 description=f'{interaction.user.mention} has already submitted a write-up for {problem_name}.',
-                color=discord.Color.blurple()
+                color=discord.Color.red()
         )
 
     await interaction.response.send_message(embed=embed)

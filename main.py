@@ -38,7 +38,7 @@ async def get_doing(interaction: discord.Interaction):
         description=description,
         color=discord.Color.blurple()
     )
-    await interaction.response.send_message(embed=embed)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 @bot.tree.command(name='start', description='Start doing a problem (not mutually exclusive)')
@@ -82,7 +82,9 @@ class LeaderboardType(Enum):
     WRITEUPS = 'write-ups'
 
 @bot.tree.command(name='leaderboard', description='Get the leaderboard! Can be problems, write-ups, or both!')
-async def get_leaderboard(interaction: discord.Interaction, leaderboard_type: Optional[LeaderboardType] = LeaderboardType.ALL):
+@app_commands.describe(public="Should the results be posted to the channel? Select 'No' if only you want to see the results")
+@app_commands.choices(public=[app_commands.Choice(name="Yes", value=1), app_commands.Choice(name="No", value=0)])
+async def get_leaderboard(interaction: discord.Interaction, leaderboard_type: Optional[LeaderboardType] = LeaderboardType.ALL, public: int=0):
     if leaderboard_type == LeaderboardType.ALL:
         title = 'Full Leaderboard'
         none = 'No solves or write-ups yet!'
@@ -107,7 +109,10 @@ async def get_leaderboard(interaction: discord.Interaction, leaderboard_type: Op
             description=description,
             color=discord.Color.blurple()
     )
-    await interaction.response.send_message(embed=embed)
+    if public:
+    	await interaction.response.send_message(embed=embed)
+    else:
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 @bot.tree.command(name='solve', description='Update the leaderboard with your solve!')

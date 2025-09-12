@@ -58,7 +58,7 @@ async def start(interaction: discord.Interaction, problem_name: str):
         return
 
     embed = discord.Embed(
-            title=':white_check_mark: Started a proplem',
+            title=':white_check_mark: Started a problem',
             description=f'{interaction.user.mention} now working on {problem_name}!',
             color=discord.Color.green()
     )
@@ -70,7 +70,7 @@ async def stop(interaction: discord.Interaction, problem_name: str):
     await db.stop(interaction.guild_id, interaction.user.id, problem_name)
 
     embed = discord.Embed(
-            title=':octagonal_sign: Stopped a proplem',
+            title=':octagonal_sign: Stopped a problem',
             description=f'{interaction.user.mention} is no longer working on {problem_name}!',
             color=discord.Color.red()
     )

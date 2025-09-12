@@ -164,7 +164,7 @@ async def stop(guild_id, user_id, name):
 
         if row is None: # can't stop if not started
             pass
-        elif row[0] == DOING: # update row if doing
+        elif row[0] == SOLVING: # update row if doing
             cursor.execute('''
                 UPDATE points
                     SET status = ?

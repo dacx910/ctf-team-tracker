@@ -64,6 +64,7 @@ async def _submit(guild_id, user_id, name, point_type):
                     name = ? AND
                     type = ?
             ''', (DONE, guild_id, user_id, name, point_type))
+            conn.commit()
             return True
         # if solved
         else:
@@ -161,9 +162,9 @@ async def stop(guild_id, user_id, name):
         ''', (guild_id, user_id, name, CHALLENGE))
         row = cursor.fetchone()
 
-        if row is None:
+        if row is None: # can't stop if not started
             pass
-        elif row[0] != DONE:
+        elif row[0] == DOING: # update row if doing
             cursor.execute('''
                 UPDATE points
                     SET status = ?
@@ -173,11 +174,8 @@ async def stop(guild_id, user_id, name):
                     name = ? AND
                     type = ?
             ''', (STOPPED, guild_id, user_id, name, CHALLENGE))
-        else:
-            cursor.execute('''
-                INSERT INTO points (guild_id, user_id, name, type, status)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (guild_id, user_id, name, CHALLENGE, STOPPED))
+            conn.commit()
+        # do nothing if done
 
 
 async def get_doing(guild_id):
